@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Моя Астана — аким на 5 часов</title>
+    <meta
+      name="description"
+      content="Построй свой район за пять игровых дней. Размещай школы, парки и остановки, слушай жителей и сравнивай последствия."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231d6854'/%3E%3Ctext x='5' y='24' font-size='24'%3EА%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="shared/style.css" />
+    <link rel="stylesheet" href="features/building/style.css" />
+    <link rel="stylesheet" href="features/residents/style.css" />
+    <link rel="stylesheet" href="features/report/style.css" />
+    <link rel="stylesheet" href="features/map/style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="./index.html"
+        ><span class="brand-icon">А</span
+        ><span>моя астана<small>АКИМ НА 5 ЧАСОВ</small></span></a
+      >
+      <div class="top-info">
+        <span class="prototype">ГОРОДСКАЯ ПЕСОЧНИЦА</span
+        ><button class="quiet" id="help">Как играть</button>
+      </div>
+    </header>
+    <main>
+      <section class="overview">
+        <div>
+          <div class="eyebrow">Твой город начинается с заботы</div>
+          <h1>Маленький район. <br /><span>Большие решения.</span></h1>
+        </div>
+        <div class="metrics">
+          <div>
+            <span class="metric-label">Бюджет</span
+            ><strong><span id="money">100</span><small> млрд ₸</small></strong>
+          </div>
+          <div>
+            <span class="metric-label">Качество жизни</span
+            ><strong><span id="score">20</span><small> / 100</small></strong>
+          </div>
+          <div>
+            <span class="metric-label">Жители</span
+            ><strong>480<small> человек</small></strong>
+          </div>
+        </div>
+      </section>
+      <nav id="days" aria-label="Пять игровых дней"></nav>
+      <div class="workspace">
+        <section class="map-panel">
+          <div class="map-top">
+            <div>
+              <h2>Астана · центральная часть</h2>
+              <span class="muted"
+                >Реальная карта · условный игровой сценарий</span
+              >
+            </div>
+            <button class="quiet" id="undo">↶ Отменить день</button>
+          </div>
+          <div class="map-wrap">
+            <div class="map-toolbar">
+              <span class="map-controls-note"
+                >Дом — потребности · «+» — строительство</span
+              >
+              <div class="zoom-buttons">
+                <button id="zoom-out" aria-label="Уменьшить карту" disabled>
+                  −</button
+                ><span id="zoom-label">100%</span
+                ><button id="zoom-in" aria-label="Увеличить карту">+</button>
+              </div>
+            </div>
+            <div class="map-viewport">
+              <div
+                id="map"
+                class="map"
+                aria-label="Реальная карта Астаны с условными игровыми участками"
+              ></div>
+            </div>
+            <div class="map-credit">
+              Карта:
+              <a
+                href="https://commons.wikimedia.org/wiki/File:OSM_Astana_central_map.jpg"
+                target="_blank"
+                rel="noopener"
+                >Sj1mor / Wikimedia Commons</a
+              >,
+              <a
+                href="https://creativecommons.org/licenses/by-sa/4.0/"
+                target="_blank"
+                rel="noopener"
+                >CC BY-SA 4.0</a
+              >
+              · ©
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                target="_blank"
+                rel="noopener"
+                >OpenStreetMap contributors</a
+              >. 25.03.2025.
+            </div>
+          </div>
+          <div class="legend">
+            <span><i class="dot poor"></i>Нужна помощь</span
+            ><span><i class="dot okay"></i>Есть улучшения</span
+            ><span><i class="dot good"></i>Комфортно</span
+            ><span>◯ Условный радиус</span>
+          </div>
+          <div class="map-caption" id="map-caption">
+            Выбери размер объекта справа, затем свободный участок на карте.
+          </div>
+        </section>
+        <aside>
+          <section class="build-panel" id="build-panel"></section>
+          <section class="resident-panel" id="resident-panel"></section>
+        </aside>
+      </div>
+      <section class="bottom-grid">
+        <div class="panel">
+          <div class="section-head">
+            <h2>Пульс района</h2>
+            <span class="muted">Обеспеченность услугами</span>
+          </div>
+          <div id="stats"></div>
+        </div>
+        <div class="panel">
+          <div class="section-head">
+            <h2>Городской советник</h2>
+            <span class="badge">РАСЧЁТНЫЙ РЕЖИМ</span>
+          </div>
+          <p id="advice">
+            Найду участок, который поможет большему числу домов. Решение за
+            тобой.
+          </p>
+          <button class="outline" id="recommend">✦ Найти лучшее место</button>
+          <p class="fine">
+            Работает по модели игры. Генеративный AI не подключён.
+          </p>
+        </div>
+      </section>
+      <section id="final" hidden></section>
+      <div class="bottom-actions">
+        <button class="quiet" id="reset">Начать заново</button
+        ><span id="save-state" class="fine"></span>
+      </div>
+      <footer>
+        Учебная модель для кейса Astana Innovations. Цены и эффекты условные.
+        Пять игровых дней соответствуют пяти решениям задания.
+      </footer>
+    </main>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <dialog id="help-dialog">
+      <button
+        class="dialog-close"
+        aria-label="Закрыть"
+        onclick="document.getElementById('help-dialog').close()"
+      >
+        ×</button
+      ><span class="eyebrow">Добро пожаловать, аким</span>
+      <h2>Построй район, в котором хочется жить</h2>
+      <ol>
+        <li>Каждый день — одно направление. Выбери размер постройки.</li>
+        <li>
+          Нажми на метку «+». Подсветка покажет радиус, а контуры домов — кого
+          обслужит объект.
+        </li>
+        <li>
+          Посмотри прогноз и нажми «Построить и завершить день». До этого деньги
+          не тратятся.
+        </li>
+        <li>Нажимай на дома, чтобы узнать потребности жителей.</li>
+        <li>
+          После пяти дней получи отчёт и проверь альтернативное размещение.
+        </li>
+      </ol>
+      <details>
+        <summary>Формула и ограничения</summary>
+        <p>
+          Каждый дом начинает с 20 баллов. Каждая из пяти доступных услуг
+          добавляет 16. Индекс города — среднее по 12 одинаковым по населению
+          домам. Направление: 20 + 80 × доля обслуженных домов.
+        </p>
+        <p>
+          Радиус считается по прямой между игровыми метками: одна игровая
+          единица — 12,5% ширины и высоты изображения. Это не километры и не
+          пешеходный маршрут. При нехватке вместимости обслуживаются ближайшие
+          дома; равные расстояния разрешаются по номеру дома. Карта реальная, но
+          дома, участки, их потребности и строительная доступность условные. Это
+          не кадастровая карта; трафик не моделируется. Все числа
+          демонстрационные. Реплики жителей — сценарные, рекомендации —
+          алгоритмические.
+        </p>
+      </details>
+      <button
+        class="primary"
+        onclick="document.getElementById('help-dialog').close()"
+      >
+        Понятно, строим!
+      </button>
+    </dialog>
+    <dialog id="reset-dialog">
+      <h2>Начать новый город?</h2>
+      <p>Текущие постройки и решения будут сброшены.</p>
+      <div class="action-row">
+        <button
+          class="outline"
+          onclick="document.getElementById('reset-dialog').close()"
+        >
+          Продолжить игру</button
+        ><button class="primary" id="confirm-reset">Новая игра</button>
+      </div>
+    </dialog>
+    <script src="core/registry.js"></script>
+    <script src="features/map/config.js"></script>
+    <script src="features/residents/data.js"></script>
+    <script src="features/building/catalog.js"></script>
+    <script src="core/engine.js"></script>
+    <script src="features/advisor/logic.js"></script>
+    <script src="features/report/logic.js"></script>
+    <script src="features/map/index.js"></script>
+    <script src="features/building/index.js"></script>
+    <script src="features/residents/index.js"></script>
+    <script src="features/advisor/index.js"></script>
+    <script src="features/report/index.js"></script>
+    <script src="features/progress/index.js"></script>
+    <script src="features/storage/index.js"></script>
+    <script src="features/help/index.js"></script>
+    <script src="features/agent-tools/index.js"></script>
+    <script src="core/app.js"></script>
+  </body>
+</html>

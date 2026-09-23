@@ -1,0 +1,42 @@
+.resident-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  background: #edf0dc;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 24px;
+}
+.resident-head strong {
+  font-size: 15px;
+}
+.resident-head small {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.quote {
+  font-size: 15px;
+  margin: 16px 0;
+}
+.needs {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.need {
+  font-size: 12px;
+  border-radius: 7px;
+  padding: 4px 7px;
+  background: #f3e9e5;
+  color: #945740;
+}
+.need.yes {
+  background: #e4f0e1;
+  color: var(--green);
+}

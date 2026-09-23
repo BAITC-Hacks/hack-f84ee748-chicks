@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Моя Астана — командный проект
 
-## Getting Started
+Игра на чистых HTML, CSS и JavaScript с изображением реальной карты центра Астаны. Дома, участки строительства, жители, цены и эффекты — условные игровые данные. AI-модель не подключена; советник алгоритмический, реплики сценарные.
 
-First, run the development server:
+## Запуск без установки
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Распакуйте весь ZIP.
+2. Откройте `dist/index.html` в браузере.
+3. Не перемещайте один HTML отдельно: рядом нужны папки `core`, `shared`, `features`.
+
+Карта и весь код находятся в архиве. Интернет для игры не нужен. Не используются npm, сборщик, внешние библиотеки и API-ключи. Обычные `<script>` оставлены специально для запуска двойным щелчком.
+
+## Где что находится
+
+```text
+akim-site/
+├── dist/
+│   ├── index.html                 # Структура страницы, подключения модулей
+│   ├── core/
+│   │   ├── app.js                 # Сборка модулей и общее состояние
+│   │   ├── engine.js              # Бюджет, размещение, охват, формула
+│   │   └── registry.js            # Пространство имён GameFeatures
+│   ├── shared/style.css           # Общие цвета, типографика, адаптивная сетка
+│   └── features/
+│       ├── map/                   # Карта, метки, масштаб, координаты, картинка
+│       ├── building/              # Строительство, выбор размера, каталог цен
+│       ├── residents/             # Жители, потребности и сценарные реплики
+│       ├── advisor/               # Советник и поиск лучшего участка
+│       ├── report/                # Итоги, сравнение альтернативы, экспорт
+│       ├── progress/              # Бюджет, показатели и пять дней
+│       ├── storage/               # Сохранение и загрузка игры
+│       ├── help/                  # Инструкция и новая игра
+│       └── agent-tools/           # Необязательная интеграция WebMCP
+├── tests/game.test.cjs            # Проверки модели, 243 стратегии
+├── КОМАНДА.md                     # Кто что меняет и как объединяться
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+В каждой папке функции есть своя краткая инструкция README.md. CSS отделён там, где у функции есть собственное оформление. Небольшие блоки без своего оформления используют shared/style.css.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Распределение на троих
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Участница 1: карта и оформление — `features/map/`, `shared/`.
+- Участница 2: строительство, жители, показатели — `features/building/`, `features/residents/`, `features/progress/`.
+- Участница 3: советник, отчёт, сохранения, помощь — `features/advisor/`, `features/report/`, `features/storage/`, `features/help/`.
 
-## Learn More
+Одна выбранная участница собирает итог. Только она меняет общий `index.html`, `core/` и порядок подключений. Подробнее — `КОМАНДА.md`.
 
-To learn more about Next.js, take a look at the following resources:
+## Как связаны функции
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Каждая функция регистрирует фабрику `GameFeatures.имя = function(ctx) { ... }`. `core/app.js` создаёт одно общее состояние и передаёт его через `ctx` всем функциям.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `ctx.state.decisions` — принятые решения; `null` означает пропуск дня.
+- `ctx.staged` — предпросмотр, деньги ещё не потрачены.
+- `ctx.tier` — выбранный размер: 0, 1 или 2.
+- `ctx.inspected` — номер выбранного дома, от 0 до 11.
+- `ctx.render()` — перерисовать все блоки.
+- `ctx.afterDecision(message)` — сохранить решение и обновить страницу.
+- `City.place(state, {x, y, tier})` — проверить решение и вернуть новое состояние.
 
-## Deploy on Vercel
+Нельзя создавать отдельную копию бюджета внутри модуля. Вызов `City.place` валидирует свободный участок, размер, деньги и число дней. HTML-шаблоны содержат только контролируемые проектом тексты; если позже появится ввод пользователя или ответ AI, выводите его через textContent, а не innerHTML.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Модель карты
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Картинка — реальный статичный снимок карты от 25 марта 2025 года, а не актуальная GIS-система. Метки и радиусы условные. `map/config.js` задаёт положение каждой игровой точки в процентах изображения. Плюсы — разрешённые игровые точки, не подтверждённые свободные земельные участки.
+
+Радиус измеряется в игровых единицах: одна единица = 12,5% ширины и высоты картинки. Охват считается по прямой между нормализованными координатами, не по дорогам. Круг радиуса использует ту же геометрию. Метки и карта увеличиваются в одной системе координат.
+
+У каждого дома 20 базовых баллов + 16 за каждую из 5 услуг. Индекс города — среднее по 12 домам, в каждом условно по 40 жителей. Если вместимость исчерпана, обслуживаются ближайшие дома. При равном расстоянии приоритет у меньшего номера дома.
+
+Советник перебирает доступные участки для выбранного размера. Итоговая альтернатива перебирает перенос одного объекта без изменения расходов и не меняет исходный город.
+
+Из-за изменения геометрии сохранения имеют новый ключ `astana-map-builder-v3`. Сохранения предыдущей версии не удалены, но не загружаются в карту с новой моделью.
+
+## Проверка после изменения
+
+Без инструментов: открыть игру → выбрать участок → изменить размер → проверить предпросмотр → построить → проверить бюджет → отменить → пройти пять дней → открыть альтернативу и отчёт → обновить страницу, убедиться, что город сохранён.
+
+Если установлен Node.js, из папки проекта выполнить:
+
+```sh
+node tests/game.test.cjs
+```
+
+Тесты проверяют размещение, радиус, вместимость, 243 комбинации размеров, отсутствие перерасхода, лимит пяти дней, сохранения, альтернативный расчёт и наличие подключённых файлов.
+
+## Карта и атрибуция
+
+Файл: `dist/features/map/assets/astana-map.jpg`.
+Автор изображения: Sj1mor. Дата: 25.03.2025.
+Источник: https://commons.wikimedia.org/wiki/File:OSM_Astana_central_map.jpg
+Лицензия: CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/
+Данные карты: © OpenStreetMap contributors, https://www.openstreetmap.org/copyright
+
+Оригинальный JPEG не редактировался; в игре он масштабируется, поверх отображаются отдельные интерактивные игровые метки. Производное визуальное представление карты с наложениями доступно на условиях CC BY-SA 4.0. Сохраняйте атрибуцию при распространении и демонстрации.

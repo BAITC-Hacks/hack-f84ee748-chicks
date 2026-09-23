@@ -1,0 +1,55 @@
+#final {
+  margin-top: 22px;
+  padding: 28px;
+  background: #203f32;
+  color: white;
+  border-radius: 20px;
+}
+#final h2 {
+  font-size: 28px;
+}
+#final p {
+  max-width: 800px;
+  color: #d9e6dc;
+}
+.final-score {
+  font-size: 60px;
+  line-height: 1.2;
+  font-weight: 800;
+  color: var(--accent);
+}
+.final-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.final-log {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+.log {
+  padding: 12px;
+  background: #ffffff0d;
+  border: 1px solid #ffffff20;
+  border-radius: 10px;
+  font-size: 13px;
+}
+.log strong {
+  display: block;
+}
+.alt {
+  padding: 18px;
+  background: #ffffff0e;
+  border-radius: 12px;
+}
+.alt button {
+  margin-top: 10px;
+}
+.alternative {
+  outline: 4px solid #ba58c5 !important;
+}
+.final-note {
+  font-size: 13px;
+}
