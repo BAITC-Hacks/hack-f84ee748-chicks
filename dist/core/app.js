@@ -52,6 +52,7 @@
     "residents",
     "progress",
     "advisor",
+    "aiAssistant",
     "report",
     "help",
   ])
