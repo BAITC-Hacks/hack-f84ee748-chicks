@@ -19,37 +19,72 @@
     <link rel="stylesheet" href="features/map/style.css" />
   </head>
   <body>
-    <header>
-      <a class="brand" href="./index.html"
-        ><span class="brand-icon">А</span
-        ><span>моя астана<small>АКИМ НА 5 ЧАСОВ</small></span></a
-      >
-      <div class="top-info">
-        <span class="prototype">ГОРОДСКАЯ ПЕСОЧНИЦА</span
-        ><button class="quiet" id="help">Как играть</button>
+    <section class="intro-hero">
+  <!-- Верхняя панель -->
+  <header class="intro-nav">
+    <a class="brand" href="#">
+      <span class="brand-icon">A</span>
+      <span>
+        моя астана
+        <small>АКИМ НА 5 ЧАСОВ</small>
+      </span>
+    </a>
+
+    <button class="intro-help" id="help">
+      Как играть ↗
+    </button>
+  </header>
+
+  <!-- Надписи по центру -->
+  <div class="intro-content">
+    <p>Твой город начинается с заботы</p>
+
+    <h1>
+      Маленький район.<br />
+      <span>Большие решения.</span>
+    </h1>
+
+    <a class="intro-start" href="#game">
+      Начать строить ↗
+    </a>
+  </div>
+
+  <a class="intro-scroll" href="#game">
+    К твоему городу ↓
+  </a>
+</section>
+
+<!-- Игра начинается ниже фонового экрана -->
+<main id="game">
+  <section class="overview">
+    <div>
+      <div class="eyebrow">Твоя Астана</div>
+      <h2>Время первого решения</h2>
+    </div>
+
+    <div class="metrics">
+      <div>
+        <span class="metric-label">Бюджет</span>
+        <strong>
+          <span id="money">100</span>
+          <small> млрд ₸</small>
+        </strong>
       </div>
-    </header>
-    <main>
-      <section class="overview">
-        <div>
-          <div class="eyebrow">Твой город начинается с заботы</div>
-          <h1>Маленький район. <br /><span>Большие решения.</span></h1>
-        </div>
-        <div class="metrics">
-          <div>
-            <span class="metric-label">Бюджет</span
-            ><strong><span id="money">100</span><small> млрд ₸</small></strong>
-          </div>
-          <div>
-            <span class="metric-label">Качество жизни</span
-            ><strong><span id="score">20</span><small> / 100</small></strong>
-          </div>
-          <div>
-            <span class="metric-label">Жители</span
-            ><strong>480<small> человек</small></strong>
-          </div>
-        </div>
-      </section>
+
+      <div>
+        <span class="metric-label">Качество жизни</span>
+        <strong>
+          <span id="score">20</span>
+          <small> / 100</small>
+        </strong>
+      </div>
+
+      <div>
+        <span class="metric-label">Жители</span>
+        <strong>480<small> человек</small></strong>
+      </div>
+    </div>
+  </section>
       <nav id="days" aria-label="Пять игровых дней"></nav>
       <div class="workspace">
         <section class="map-panel">
