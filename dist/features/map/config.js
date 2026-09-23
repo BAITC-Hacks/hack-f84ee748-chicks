@@ -1,9 +1,9 @@
-/* Координаты в процентах изображения. Игровые метки, не кадастровые данные.
-   Меняйте overrides для точечной перестановки; ключ — "x,y" логического участка. */
 globalThis.CityMap = {
-  image: "features/map/assets/astana-map.jpg",
+  image: "features/map/astana-game-map.png",
+
   columns: [7, 19, 29, 40, 49, 61, 77, 90],
   rows: [12, 23, 33, 43, 56, 67, 78, 90],
+
   overrides: {
     "5,0": [65, 14],
     "4,0": [48, 9],
@@ -18,10 +18,15 @@ globalThis.CityMap = {
     "0,6": [9, 73],
     "0,7": [13, 86],
   },
+
   position(p) {
     const pair = this.overrides[`${p.x},${p.y}`];
+
     return pair
       ? { left: pair[0], top: pair[1] }
-      : { left: this.columns[p.x], top: this.rows[p.y] };
+      : {
+          left: this.columns[p.x],
+          top: this.rows[p.y],
+        };
   },
 };
